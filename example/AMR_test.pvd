@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<VTKFile type="Collection" version="1.0" byte_order="LittleEndian" compressor="vtkZLibDataCompressor">
+  <Collection>
+    <DataSet timestep="0" part="0" file="p4est_test0.vtu"/>
+    <DataSet timestep="1" part="0" file="p4est_test1.vtu"/>
+    <DataSet timestep="2" part="0" file="p4est_test2.vtu"/>
+    <DataSet timestep="3" part="0" file="p4est_test3.vtu"/>
+    <DataSet timestep="4" part="0" file="p4est_test4.vtu"/>
+    <DataSet timestep="5" part="0" file="p4est_test5.vtu"/>
+    <DataSet timestep="6" part="0" file="p4est_test6.vtu"/>
+    <DataSet timestep="7" part="0" file="p4est_test7.vtu"/>
+  </Collection>
+</VTKFile>

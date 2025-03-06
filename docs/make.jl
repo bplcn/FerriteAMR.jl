@@ -1,0 +1,23 @@
+using FerriteAMR
+using Documenter
+
+DocMeta.setdocmeta!(FerriteAMR, :DocTestSetup, :(using FerriteAMR); recursive=true)
+
+makedocs(;
+    modules=[FerriteAMR],
+    authors="Pei-Liang Bian",
+    sitename="FerriteAMR.jl",
+    format=Documenter.HTML(;
+        canonical="https://bplcn.github.io/FerriteAMR.jl",
+        edit_link="master",
+        assets=String[],
+    ),
+    pages=[
+        "Home" => "index.md",
+    ],
+)
+
+deploydocs(;
+    repo="github.com/bplcn/FerriteAMR.jl",
+    devbranch="master",
+)

@@ -1,0 +1,3 @@
+[deps]
+Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+FerriteAMR = "4e7a23dd-4455-49f3-a66f-78be04ccd306"
