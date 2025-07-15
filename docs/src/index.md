@@ -2,7 +2,7 @@
 CurrentModule = FerriteAMR
 ```
 
-# FerriteAMR
+# FerriteAMR.jl
 
 Documentation for [FerriteAMR](https://github.com/bplcn/FerriteAMR.jl).
 

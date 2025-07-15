@@ -1,7 +1,12 @@
+using Documenter, DocumenterCitations
 using FerriteAMR
-using Documenter
 
 DocMeta.setdocmeta!(FerriteAMR, :DocTestSetup, :(using FerriteAMR); recursive=true)
+
+bibtex_plugin = CitationBibliography(
+    joinpath(@__DIR__, "src", "assets", "references.bib"),
+    style=:numeric
+)
 
 makedocs(;
     modules=[FerriteAMR],
@@ -13,8 +18,13 @@ makedocs(;
         assets=String[],
     ),
     pages=[
-        "Home" => "index.md",
+        "Home" => "index.md",        
+        "AMR.md",
+        "references.md",
     ],
+    plugins = [
+        bibtex_plugin,
+    ]
 )
 
 deploydocs(;
