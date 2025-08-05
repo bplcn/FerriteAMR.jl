@@ -944,6 +944,7 @@ function balance_face(forest,k′,f′,o,s)
     s′ = transform_facet(forest,k′,f′,s)
     neighbor_tree = forest.cells[k′]
     if s′ ∉ neighbor_tree.leaves && parent(s′, neighbor_tree.b) ∉ neighbor_tree.leaves
+        # ! P.L. Bian: problems here?
         if parent(parent(s′,neighbor_tree.b),neighbor_tree.b) ∈ neighbor_tree.leaves
             refine!(neighbor_tree,parent(parent(s′,neighbor_tree.b),neighbor_tree.b))
         end
@@ -972,9 +973,10 @@ function balanceforest!(forest::ForestBWG{dim}) where dim
     perm_corner_inv = dim == 2 ? node_map₂_inv : node_map₃_inv
     root_ = root(dim)
     nrefcells = 0
-    # ! P.L. Bian 
+    # ! P.L. Bian modify here
     # facet_neighborhood = Ferrite.Ferrite.get_facet_facet_neighborhood(forest)
     facet_neighborhood = Ferrite.get_facet_facet_neighborhood(forest)
+
     while nrefcells - getncells(forest) != 0
         nrefcells = getncells(forest)
         for k in 1:length(forest.cells)
@@ -996,7 +998,7 @@ function balanceforest!(forest::ForestBWG{dim}) where dim
                         if dim == 2 # need more clever s_i encoding
                             if s_i <= 4 #corner neighbor, only true for 2D see possibleneighbors
                                 cc = forest.topology.vertex_vertex_neighbor[k,perm_corner[s_i]]
-                                participating_faces_idx = findall(x->any(x .== s_i),𝒱₂) #TODO! optimize by using inverted table
+                                participating_faces_idx = findall(x->any(x .== s_i),𝒱₂) # TODO:  optimize by using inverted table
                                 pivot_faces = faces(o,tree.b)
                                 if isempty(cc)
                                     # the branch below checks if we are in a newly introduced topologic tree connection
@@ -1011,7 +1013,7 @@ function balanceforest!(forest::ForestBWG{dim}) where dim
                                             @assert length(fc) == 1
                                             fc = fc[1]
                                             k′, f′ = fc[1], perm_face_inv[fc[2]]
-                                            balance_face(forest,k′,f′,o,s)
+                                            # balance_face(forest,k′,f′,o,s)
                                         end
                                     end
                                     continue
@@ -1019,7 +1021,7 @@ function balanceforest!(forest::ForestBWG{dim}) where dim
                                     for corner_connection in cc
                                         !(vertex(o,s_i,tree.b) == rootvertices[s_i]) && continue
                                         k′, c′ = corner_connection[1], perm_corner_inv[corner_connection[2]]
-                                        balance_corner(forest,k′,c′,o,s)
+                                        # balance_corner(forest,k′,c′,o,s)
                                     end
                                 end
                             else # face neighbor, only true for 2D
