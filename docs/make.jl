@@ -14,13 +14,13 @@ makedocs(;
     sitename="FerriteAMR.jl",
     format=Documenter.HTML(;
         canonical="https://bplcn.github.io/FerriteAMR.jl",
-        edit_link="master",
+        edit_link="main",
         assets=String[],
     ),
     pages=[
         "Home" => "index.md",        
-        "AMR.md",
-        "references.md",
+        "API" => "AMR.md",
+        "References" => "references.md",
     ],
     plugins = [
         bibtex_plugin,
