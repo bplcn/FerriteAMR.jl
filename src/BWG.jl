@@ -465,15 +465,15 @@ function Ferrite.get_facet_facet_neighborhood(g::ForestBWG{dim}) where dim
 end
 
 function refine_all!(forest::ForestBWG,l)
-   for tree in forest.cells
-      for leaf in tree.leaves
-          if leaf.l != l-1 #maxlevel
-              continue
-          else
-              refine!(tree,leaf)
-          end
-      end
-   end
+    for tree in forest.cells
+        for leaf in tree.leaves
+            if leaf.l != l-1 #maxlevel
+                continue
+            else
+                refine!(tree,leaf)
+            end
+        end
+    end
 end
 
 function refine!(forest::ForestBWG, cellid::Integer)
@@ -929,7 +929,8 @@ end
 function balance_corner(forest,k′,c′,o,s)
     o.l == 1 && return # no balancing needed for pivot octant level == 1
     o′ = transform_corner(forest,k′,c′,o,false)
-    s′ = transform_corner(forest,k′,c′,s,true) #TODO verify the bool here; I think it's correct
+    # ! Bian modify the bool from true to false
+    s′ = transform_corner(forest,k′,c′,s,false) #TODO verify the bool here; I think it's correct
     neighbor_tree = forest.cells[k′]
     if s′ ∉ neighbor_tree.leaves && parent(s′, neighbor_tree.b) ∉ neighbor_tree.leaves
         if parent(parent(s′,neighbor_tree.b),neighbor_tree.b) ∈ neighbor_tree.leaves
@@ -944,7 +945,6 @@ function balance_face(forest,k′,f′,o,s)
     s′ = transform_facet(forest,k′,f′,s)
     neighbor_tree = forest.cells[k′]
     if s′ ∉ neighbor_tree.leaves && parent(s′, neighbor_tree.b) ∉ neighbor_tree.leaves
-        # ! P.L. Bian: problems here?
         if parent(parent(s′,neighbor_tree.b),neighbor_tree.b) ∈ neighbor_tree.leaves
             refine!(neighbor_tree,parent(parent(s′,neighbor_tree.b),neighbor_tree.b))
         end
@@ -966,7 +966,7 @@ end
     balanceforest!(forest)
 Algorithm 17 of [BWG2011](@citet)
 """
-function balanceforest!(forest::ForestBWG{dim}) where dim
+function balanceforest!(forest::ForestBWG{dim}; corner_balance::Bool=true) where dim
     perm_face = dim == 2 ? 𝒱₂_perm : 𝒱₃_perm
     perm_face_inv = dim == 2 ? 𝒱₂_perm_inv : 𝒱₃_perm_inv
     perm_corner = dim == 2 ? node_map₂ : node_map₃
@@ -997,6 +997,7 @@ function balanceforest!(forest::ForestBWG{dim}) where dim
                         s = ss[s_i]
                         if dim == 2 # need more clever s_i encoding
                             if s_i <= 4 #corner neighbor, only true for 2D see possibleneighbors
+                                !corner_balance && continue
                                 cc = forest.topology.vertex_vertex_neighbor[k,perm_corner[s_i]]
                                 participating_faces_idx = findall(x->any(x .== s_i),𝒱₂) # TODO:  optimize by using inverted table
                                 pivot_faces = faces(o,tree.b)
@@ -1013,15 +1014,17 @@ function balanceforest!(forest::ForestBWG{dim}) where dim
                                             @assert length(fc) == 1
                                             fc = fc[1]
                                             k′, f′ = fc[1], perm_face_inv[fc[2]]
-                                            # balance_face(forest,k′,f′,o,s)
+                                            balance_face(forest,k′,f′,o,s)
                                         end
                                     end
                                     continue
                                 else
                                     for corner_connection in cc
+                                        # ! P.-L. Bian 2025-08-05: problems here
+                                        # todo: fix the problem of over refinement
                                         !(vertex(o,s_i,tree.b) == rootvertices[s_i]) && continue
                                         k′, c′ = corner_connection[1], perm_corner_inv[corner_connection[2]]
-                                        # balance_corner(forest,k′,c′,o,s)
+                                        balance_corner(forest,k′,c′,o,s)
                                     end
                                 end
                             else # face neighbor, only true for 2D

@@ -67,7 +67,7 @@ function check_and_compute_convergence(dh, cellvalues, forest; lmin, region_func
     end
 
     FerriteAMR.refine!(forest,marked_cells)
-    FerriteAMR.balanceforest!(forest)
+    FerriteAMR.balanceforest!(forest;corner_balance=true)
 
     ifrefine = length(marked_cells) > 0
 
@@ -99,7 +99,7 @@ function solve()
 
     region_func = reg_fun(x) = abs(x[2]-25.0) < 0.25 && abs(x[1]-50.0) < 0.25
 
-    while if_refine && i < 4
+    while if_refine && i < 20
 
         grid_transfered = FerriteAMR.creategrid(adaptive_grid)
 
@@ -118,3 +118,4 @@ function solve()
 end
 
 solve()
+
