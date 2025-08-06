@@ -29,5 +29,5 @@ makedocs(;
 
 deploydocs(;
     repo="github.com/bplcn/FerriteAMR.jl",
-    devbranch="master",
+    devbranch="main",
 )
